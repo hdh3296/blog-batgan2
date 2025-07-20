@@ -10,17 +10,14 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file from backend directory
-COPY backend/requirements.txt .
+# Copy requirements file
+COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code from backend directory
-COPY backend/app /app/app
-
-# Copy frontend files
-COPY frontend /app/frontend
+# Copy application code
+COPY app /app/app
 
 # Expose port
 EXPOSE 8000
