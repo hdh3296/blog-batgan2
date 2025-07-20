@@ -1,6 +1,8 @@
 import sentry_sdk
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
@@ -31,3 +33,28 @@ if settings.all_cors_origins:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# 정적 파일 및 템플릿 설정
+app.mount("/static", StaticFiles(directory="../frontend/static"), name="static")
+templates = Jinja2Templates(directory="../frontend/templates")
+
+# 웹페이지 라우터
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "title": "My Blog"
+    })
+
+@app.get("/blog")
+async def blog_list(request: Request):
+    return templates.TemplateResponse("blog/list.html", {
+        "request": request
+    })
+
+@app.get("/blog/{post_id}")
+async def blog_detail(request: Request, post_id: int):
+    return templates.TemplateResponse("blog/detail.html", {
+        "request": request,
+        "post_id": post_id
+    })

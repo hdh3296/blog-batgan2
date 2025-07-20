@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}블로그 - My Blog{% endblock %}
+
+{% block content %}
+<section class="blog-header">
+    <h2>블로그</h2>
+    <p>모든 블로그 포스트를 확인하세요.</p>
+</section>
+
+<section class="blog-posts">
+    <div id="posts-container">
+        <!-- JavaScript로 동적 로드 -->
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 모든 포스트 로드
+    loadAllPosts();
+</script>
+{% endblock %}

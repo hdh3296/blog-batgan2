@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}H - My Blog{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>Welcome to My Blog</h2>
+    <p>FastAPI + Ð| JS\ Ìà \ø…Èä.</p>
+    <a href="/blog" class="btn">\ø ô0</a>
+</section>
+
+<section class="recent-posts">
+    <h3>\ü ì¤¸</h3>
+    <div id="recent-posts-container">
+        <!-- JavaScript\ Ù \Ü -->
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // \ü ì¤¸ \Ü
+    loadRecentPosts();
+</script>
+{% endblock %}

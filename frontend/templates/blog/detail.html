@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}포스트 - My Blog{% endblock %}
+
+{% block content %}
+<article class="blog-post">
+    <h2 id="post-title">로딩 중...</h2>
+    <div class="post-meta">
+        <time id="post-date"></time>
+    </div>
+    <div id="post-content">
+        <!-- JavaScript로 동적 로드 -->
+    </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 포스트 ID 가져오기
+    const postId = {{ post_id }};
+    loadPost(postId);
+</script>
+{% endblock %}
