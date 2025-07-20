@@ -34,6 +34,30 @@ if settings.all_cors_origins:
         allow_headers=["*"],
     )
 
+# HTTPS 프록시 뒤에서 올바른 scheme 사용을 위한 미들웨어
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
+
+class ProxyHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: StarletteRequest, call_next):
+        # X-Forwarded-Proto 헤더 확인
+        forwarded_proto = request.headers.get("X-Forwarded-Proto")
+        if forwarded_proto:
+            request.scope["scheme"] = forwarded_proto
+        
+        # X-Forwarded-Host 헤더 확인
+        forwarded_host = request.headers.get("X-Forwarded-Host")
+        if forwarded_host:
+            request.scope["server"] = (forwarded_host, request.scope["server"][1])
+        
+        response = await call_next(request)
+        return response
+
+# 프로덕션 환경에서만 프록시 미들웨어 적용
+if settings.ENVIRONMENT != "local":
+    app.add_middleware(ProxyHeadersMiddleware)
+
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # 정적 파일 및 템플릿 설정
