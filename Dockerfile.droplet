@@ -19,6 +19,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend application code
 COPY backend/app /app/app
 
+# Copy alembic configuration and migrations
+COPY backend/alembic.ini /app/alembic.ini
+COPY backend/app/alembic /app/app/alembic
+
+# Copy prestart script
+COPY backend/prestart.sh /app/prestart.sh
+RUN chmod +x /app/prestart.sh
+
 # Copy frontend directory for static file serving
 COPY frontend /app/frontend
 
@@ -29,5 +37,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:8000/api/v1/utils/health-check/ || exit 1
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the application with prestart script
+CMD ["/bin/bash", "-c", "/app/prestart.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000"]

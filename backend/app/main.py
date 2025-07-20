@@ -38,12 +38,26 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # 정적 파일 및 템플릿 설정
 import os
-static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "frontend", "static")
-templates_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "frontend", "templates")
 
+# 백엔드 디렉토리의 부모 경로를 기준으로 설정
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Dockerfile.droplet에서는 /app/frontend로 복사됨
+if os.path.exists("/app/frontend"):
+    # 프로덕션 환경
+    static_dir = "/app/frontend/static"
+    templates_dir = "/app/frontend/templates"
+else:
+    # 로컬 개발 환경
+    static_dir = os.path.join(base_dir, "..", "frontend", "static")
+    templates_dir = os.path.join(base_dir, "..", "frontend", "templates")
+
+# 정적 파일 마운트
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
-    templates = Jinja2Templates(directory=templates_dir)
+
+# 템플릿 설정 - 항상 초기화
+templates = Jinja2Templates(directory=templates_dir)
 
 # 웹페이지 라우터
 @app.get("/")
