@@ -17,13 +17,13 @@ attempt = 0
 
 while attempt < max_attempts:
     try:
-        conn = psycopg.connect(str(settings.DATABASE_URI))
+        conn = psycopg.connect(str(settings.SQLALCHEMY_DATABASE_URI))
         conn.close()
         print('Database is ready!')
         break
     except Exception as e:
         attempt += 1
-        print(f'Database not ready yet. Attempt {attempt}/{max_attempts}')
+        print(f'Database not ready yet. Attempt {attempt}/{max_attempts}. Error: {e}')
         time.sleep(2)
 else:
     print('Database connection failed after maximum attempts')
