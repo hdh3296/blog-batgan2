@@ -15,9 +15,12 @@ from app.core.config import settings
 max_attempts = 30
 attempt = 0
 
+# Build psycopg connection string with SSL
+conn_str = f'host={settings.POSTGRES_SERVER} port={settings.POSTGRES_PORT} dbname={settings.POSTGRES_DB} user={settings.POSTGRES_USER} password={settings.POSTGRES_PASSWORD} sslmode=require'
+
 while attempt < max_attempts:
     try:
-        conn = psycopg.connect(str(settings.SQLALCHEMY_DATABASE_URI))
+        conn = psycopg.connect(conn_str)
         conn.close()
         print('Database is ready!')
         break
