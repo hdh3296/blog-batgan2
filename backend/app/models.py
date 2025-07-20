@@ -94,6 +94,44 @@ class ItemsPublic(SQLModel):
     count: int
 
 
+# Blog Post models
+class PostBase(SQLModel):
+    title: str = Field(min_length=1, max_length=255)
+    content: str = Field(min_length=1)
+    excerpt: str | None = Field(default=None, max_length=500)
+    author: str = Field(default="Admin")
+    published: bool = Field(default=True)
+
+
+class PostCreate(PostBase):
+    pass
+
+
+class PostUpdate(SQLModel):
+    title: str | None = Field(default=None, min_length=1, max_length=255)
+    content: str | None = Field(default=None, min_length=1)
+    excerpt: str | None = Field(default=None, max_length=500)
+    author: str | None = Field(default=None)
+    published: bool | None = Field(default=None)
+
+
+class Post(PostBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: Optional[datetime] = Field(default=None, nullable=True)
+
+
+class PostPublic(PostBase):
+    id: uuid.UUID
+    created_at: datetime
+    updated_at: Optional[datetime]
+
+
+class PostsPublic(SQLModel):
+    items: list[PostPublic]
+    count: int
+
+
 # Generic message
 class Message(SQLModel):
     message: str
@@ -113,39 +151,3 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
-
-
-# Blog Post models
-class PostBase(SQLModel):
-    title: str = Field(min_length=1, max_length=255)
-    content: str
-    author: str = Field(default="Admin")
-    published: bool = Field(default=True)
-
-
-class Post(PostBase, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
-    updated_at: Optional[datetime] = Field(default=None, nullable=True)
-
-
-class PostCreate(PostBase):
-    pass
-
-
-class PostUpdate(SQLModel):
-    title: Optional[str] = Field(default=None, min_length=1, max_length=255)
-    content: Optional[str] = None
-    author: Optional[str] = None
-    published: Optional[bool] = None
-
-
-class PostPublic(PostBase):
-    id: uuid.UUID
-    created_at: datetime
-    updated_at: Optional[datetime]
-
-
-class PostsPublic(SQLModel):
-    items: list[PostPublic]
-    count: int

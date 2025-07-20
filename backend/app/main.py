@@ -37,8 +37,13 @@ if settings.all_cors_origins:
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # 정적 파일 및 템플릿 설정
-app.mount("/static", StaticFiles(directory="/app/frontend/static"), name="static")
-templates = Jinja2Templates(directory="/app/frontend/templates")
+import os
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "frontend", "static")
+templates_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", "frontend", "templates")
+
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+    templates = Jinja2Templates(directory=templates_dir)
 
 # 웹페이지 라우터
 @app.get("/")
