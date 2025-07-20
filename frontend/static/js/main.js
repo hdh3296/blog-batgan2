@@ -1,7 +1,7 @@
-// API �t� URL
+// API 기본 URL
 const API_BASE = '/api/v1';
 
-// \� 줸 \�
+// 최근 게시글 로드
 async function loadRecentPosts() {
     try {
         const response = await fetch(`${API_BASE}/posts/?limit=5`);
@@ -16,11 +16,11 @@ async function loadRecentPosts() {
             </article>
         `).join('');
     } catch (error) {
-        console.error('줸 \� �(:', error);
+        console.error('최근 게시글 로드 오류:', error);
     }
 }
 
-// \� �8 �t��
+// 게시글 상세 페이지
 async function loadPost(postId) {
     try {
         const response = await fetch(`${API_BASE}/posts/${postId}`);
@@ -31,11 +31,11 @@ async function loadPost(postId) {
         document.getElementById('post-date').textContent = 
             new Date(post.created_at).toLocaleDateString('ko-KR');
     } catch (error) {
-        console.error('줸 \� �(:', error);
+        console.error('게시글 로드 오류:', error);
     }
 }
 
-// \� �] �t��
+// 모든 게시글 페이지
 async function loadAllPosts() {
     try {
         const response = await fetch(`${API_BASE}/posts/`);
@@ -46,14 +46,14 @@ async function loadAllPosts() {
             <article class="post-item">
                 <h3><a href="/blog/${post.id}">${post.title}</a></h3>
                 <div class="post-meta">
-                    <span>�1�: ${post.author}</span>
+                    <span>작성자: ${post.author}</span>
                     <time>${new Date(post.created_at).toLocaleDateString('ko-KR')}</time>
                 </div>
                 <p>${post.content.substring(0, 200)}...</p>
-                <a href="/blog/${post.id}" class="read-more">T }0 �</a>
+                <a href="/blog/${post.id}" class="read-more">더 읽기 →</a>
             </article>
         `).join('');
     } catch (error) {
-        console.error('줸 �] \� �(:', error);
+        console.error('게시글 목록 로드 오류:', error);
     }
 }

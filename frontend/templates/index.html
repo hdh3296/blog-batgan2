@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}H - My Blog{% endblock %}
+{% block title %}홈 - My Blog{% endblock %}
 
 {% block content %}
 <section class="hero">
     <h2>Welcome to My Blog</h2>
-    <p>FastAPI + �| JS\ �� \����.</p>
-    <a href="/blog" class="btn">\� �0</a>
+    <p>FastAPI + Vanilla JS로 만든 블로그입니다.</p>
+    <a href="/blog" class="btn">블로그 보기</a>
 </section>
 
 <section class="recent-posts">
-    <h3>\� 줸</h3>
+    <h3>최근 게시글</h3>
     <div id="recent-posts-container">
-        <!-- JavaScript\ � \� -->
+        <!-- JavaScript로 동적 로드 -->
     </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // \� 줸 \�
+    // 최근 게시글 로드
     loadRecentPosts();
 </script>
 {% endblock %}

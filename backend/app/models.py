@@ -1,4 +1,6 @@
 import uuid
+from datetime import datetime
+from typing import Optional
 
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
@@ -111,3 +113,39 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
+
+
+# Blog Post models
+class PostBase(SQLModel):
+    title: str = Field(min_length=1, max_length=255)
+    content: str
+    author: str = Field(default="Admin")
+    published: bool = Field(default=True)
+
+
+class Post(PostBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: Optional[datetime] = Field(default=None, nullable=True)
+
+
+class PostCreate(PostBase):
+    pass
+
+
+class PostUpdate(SQLModel):
+    title: Optional[str] = Field(default=None, min_length=1, max_length=255)
+    content: Optional[str] = None
+    author: Optional[str] = None
+    published: Optional[bool] = None
+
+
+class PostPublic(PostBase):
+    id: uuid.UUID
+    created_at: datetime
+    updated_at: Optional[datetime]
+
+
+class PostsPublic(SQLModel):
+    items: list[PostPublic]
+    count: int
