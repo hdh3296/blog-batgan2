@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    ports:
+      - "5432:5432"
+    volumes:
+      - app-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changethis123
+      - POSTGRES_DB=app
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.local
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./frontend:/frontend
+    environment:
+      - PYTHONPATH=/app
+      - PROJECT_NAME=Blog Batgan
+      - DOMAIN=localhost
+      - FRONTEND_HOST=http://localhost:8000
+      - ENVIRONMENT=local
+      - BACKEND_CORS_ORIGINS=["http://localhost:8000","http://localhost:3000"]
+      - SECRET_KEY=changethis123
+      - FIRST_SUPERUSER=admin@example.com
+      - FIRST_SUPERUSER_PASSWORD=changethis123
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changethis123
+    command: sh -c "cd /app && alembic upgrade head && python -m app.initial_data && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+volumes:
+  app-db-data:
+
+networks:
+  default:
+    name: blog-batgan2-network
