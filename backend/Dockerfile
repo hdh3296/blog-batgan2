@@ -27,7 +27,7 @@ EXPOSE 8000
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:8000/docs || exit 1
+  CMD curl -f http://localhost:8000/api/v1/utils/health-check/ || exit 1
 
 
 # Run the application
