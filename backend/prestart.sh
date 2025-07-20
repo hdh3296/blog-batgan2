@@ -36,6 +36,7 @@ else:
 # Run migrations
 echo "Running database migrations..."
 cd /app
+export PYTHONPATH=/app:$PYTHONPATH
 alembic upgrade head
 
 echo "Pre-start script completed successfully!"
