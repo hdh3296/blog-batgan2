@@ -55,7 +55,7 @@ async def blog_list(request: Request):
     })
 
 @app.get("/blog/{post_id}")
-async def blog_detail(request: Request, post_id: int):
+async def blog_detail(request: Request, post_id: str):
     return templates.TemplateResponse("blog/detail.html", {
         "request": request,
         "post_id": post_id

@@ -12,12 +12,14 @@
     <div id="posts-container">
         <!-- JavaScript로 동적 로드 -->
     </div>
+    <div id="pagination">
+        <!-- 페이지네이션이 여기에 추가됩니다 -->
+    </div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // 모든 포스트 로드
-    loadAllPosts();
+<script type="module">
+    // 페이지 초기화는 main-v2.js에서 자동으로 처리됨
 </script>
 {% endblock %}
