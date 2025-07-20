@@ -8,3 +8,5 @@ node_modules/
 # Custom directories
 logs/
 .claude/
+.bmad-core/
+web-bundles/
