@@ -22,6 +22,9 @@ COPY backend/app /app/app
 # Copy alembic configuration
 COPY backend/alembic.ini /app/alembic.ini
 
+# Copy frontend templates and static files
+COPY frontend /app/frontend
+
 # Expose port
 EXPOSE 8000
 
