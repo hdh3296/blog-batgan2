@@ -1,4 +1,4 @@
-# Modern Blog Platform
+# Blog Batgan
 
 FastAPI + Vanilla JavaScript ES6+를 사용한 현대적인 블로그 플랫폼
 
@@ -21,8 +21,9 @@ FastAPI + Vanilla JavaScript ES6+를 사용한 현대적인 블로그 플랫폼
 - 📱 **반응형 디자인** - 모바일 친화적 UI
 
 ### DevOps & Tools
-- 🐋 **Docker Compose** - 개발 및 배포 환경
-- 🚢 **Traefik** - 리버스 프록시 / 로드 밸런서
+- 🐋 **Docker & Docker Compose** - 컨테이너화 및 오케스트레이션
+- 🚀 **DigitalOcean** - 클라우드 호스팅 플랫폼
+- 🔧 **Nginx** - 리버스 프록시 서버
 - 🧪 **Playwright** - E2E 테스팅
 - ✅ **Pytest** - 백엔드 테스트
 - 📧 **MailCatcher** - 개발용 메일 서버
@@ -78,8 +79,8 @@ FastAPI + Vanilla JavaScript ES6+를 사용한 현대적인 블로그 플랫폼
 
 ### 1. 저장소 클론
 ```bash
-git clone <repository-url>
-cd svelte-blog
+git clone https://github.com/hdh3296/blog-batgan2.git
+cd blog-batgan2
 ```
 
 ### 2. 환경 설정
@@ -98,6 +99,7 @@ docker-compose up -d
 - **API 문서**: http://localhost:8000/docs
 - **관리자 도구**: http://localhost:8080 (Adminer)
 - **메일 인터페이스**: http://localhost:1080 (MailCatcher)
+- **프로덕션 사이트**: http://174.138.30.39 (DigitalOcean 배포)
 
 ## 📖 API 문서
 
@@ -190,19 +192,44 @@ SMTP_PASSWORD=your-app-password
 
 ## 🚢 배포
 
-### Docker를 사용한 프로덕션 배포
-```bash
-# 프로덕션 이미지 빌드
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+### DigitalOcean 배포
 
-# 또는 개별 서비스 배포
-docker-compose up -d --build
+이 프로젝트는 DigitalOcean Droplet에 배포되어 있습니다.
+
+#### 배포 아키텍처
+```
+Internet → Nginx (80) → Docker Container → FastAPI (8000)
+                                        → PostgreSQL (5432)
 ```
 
-### 주요 체크리스트
-- [ ] 환경 변수 설정 (`SECRET_KEY`, `POSTGRES_PASSWORD` 등)
-- [ ] HTTPS 인증서 설정 (Traefik)
-- [ ] 데이터베이스 백업 전략
+#### 배포 스크립트
+```bash
+# 1. 서버 접속
+ssh root@174.138.30.39
+
+# 2. 코드 업데이트
+cd /opt/blog-batgan2
+git pull origin main
+
+# 3. Docker 이미지 재빌드 및 재시작
+docker-compose -f docker-compose.production.yml down
+docker-compose -f docker-compose.production.yml up -d --build
+
+# 4. Nginx 설정 업데이트 (필요시)
+cp nginx/nginx.conf /etc/nginx/sites-available/blog-batgan2
+nginx -t && systemctl reload nginx
+```
+
+### 환경별 설정 파일
+- **개발**: `docker-compose.yml`, `.env`
+- **프로덕션**: `docker-compose.production.yml`, `.env.production`
+
+### 배포 체크리스트
+- [x] 환경 변수 설정 (`SECRET_KEY`, `POSTGRES_PASSWORD` 등)
+- [x] Nginx 리버스 프록시 설정
+- [x] Docker 컨테이너 헬스체크
+- [ ] HTTPS 인증서 설정 (Let's Encrypt)
+- [ ] 데이터베이스 백업 자동화
 - [ ] 로그 모니터링 설정
 
 ## 🔒 보안 기능
@@ -213,12 +240,11 @@ docker-compose up -d --build
 - **CORS 정책**: 적절한 CORS 설정
 - **SQL 인젝션 방지**: SQLModel ORM 사용
 
-## 📚 문서
+## 📚 추가 문서
 
 - [JavaScript 코드 품질 가이드](./docs/javascript-code-quality-guide-2025.md)
-- [백엔드 개발 가이드](./backend/README.md)
-- [배포 가이드](./deployment.md)
-- [개발 환경 설정](./development.md)
+- [배포 가이드](./deploy/README.md)
+- API 문서: `/docs` 엔드포인트
 
 ## 🤝 기여하기
 
