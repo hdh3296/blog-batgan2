@@ -9,9 +9,7 @@ jobs:
   deploy:
     # Do not deploy in the main repository, only in user projects
     if: github.repository_owner != 'fastapi'
-    runs-on:
-      - self-hosted
-      - staging
+    runs-on: ubuntu-latest
     env:
       ENVIRONMENT: staging
       DOMAIN: ${{ secrets.DOMAIN_STAGING }}
@@ -28,5 +26,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_STAGING }} build
-      - run: docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_STAGING }} up -d
+      
+      - name: Deploy to DigitalOcean Droplet via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            cd ~/blog-batgan2 || mkdir -p ~/blog-batgan2
+            cd ~/blog-batgan2
+            git pull origin main || git clone https://github.com/${{ github.repository }}.git .
+            docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_STAGING }} build
+            docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_STAGING }} up -d
