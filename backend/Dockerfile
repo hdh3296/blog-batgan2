@@ -22,6 +22,9 @@ COPY app /app/app
 # Copy alembic configuration
 COPY alembic.ini /app/alembic.ini
 
+# Copy scripts
+COPY scripts /app/scripts
+
 # Frontend will be mounted as volume in docker-compose.yml
 # COPY frontend /app/frontend
 
