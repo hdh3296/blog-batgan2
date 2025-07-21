@@ -34,8 +34,59 @@ jobs:
           username: ${{ secrets.DROPLET_USERNAME }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            cd ~/blog-batgan2 || mkdir -p ~/blog-batgan2
-            cd ~/blog-batgan2
-            git pull origin main || git clone https://github.com/${{ github.repository }}.git .
-            docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_STAGING }} build
-            docker compose -f docker-compose.yml --project-name ${{ secrets.STACK_NAME_STAGING }} up -d
+            # 프로젝트 디렉토리 설정
+            PROJECT_DIR="$HOME/blog-batgan2"
+            GITHUB_REPO="hdh3296/blog-batgan2"
+            
+            # 디렉토리가 없으면 생성하고 clone
+            if [ ! -d "$PROJECT_DIR" ]; then
+              mkdir -p "$PROJECT_DIR"
+              git clone https://github.com/$GITHUB_REPO.git "$PROJECT_DIR"
+            fi
+            
+            # 프로젝트 디렉토리로 이동
+            cd "$PROJECT_DIR"
+            
+            # 최신 코드 pull
+            git pull origin main
+            
+            # 환경변수 파일 생성
+            cat > .env <<EOF
+            DOMAIN=${{ secrets.DOMAIN_STAGING }}
+            ENVIRONMENT=staging
+            PROJECT_NAME="Batgan Blog"
+            STACK_NAME=${{ secrets.STACK_NAME_STAGING }}
+            
+            # Backend
+            BACKEND_CORS_ORIGINS="http://localhost,http://localhost:5173,https://localhost,https://localhost:5173"
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}
+            FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}
+            
+            # Postgres
+            POSTGRES_SERVER=db
+            POSTGRES_PORT=5432
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            
+            # Email (optional)
+            SMTP_HOST=${{ secrets.SMTP_HOST }}
+            SMTP_USER=${{ secrets.SMTP_USER }}
+            SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}
+            EMAILS_FROM_EMAIL=${{ secrets.EMAILS_FROM_EMAIL }}
+            SMTP_TLS=True
+            SMTP_SSL=False
+            SMTP_PORT=587
+            
+            # Monitoring (optional)
+            SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+            
+            # Docker
+            DOCKER_IMAGE_BACKEND=backend
+            DOCKER_IMAGE_FRONTEND=frontend
+            EOF
+            
+            # Docker Compose로 빌드 및 배포
+            docker compose -f docker-compose.yml build
+            docker compose -f docker-compose.yml up -d
