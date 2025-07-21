@@ -96,6 +96,9 @@ jobs:
             DOCKER_IMAGE_FRONTEND=frontend
             EOF
             
+            # traefik-public 네트워크가 없으면 생성
+            docker network create traefik-public || echo "Network traefik-public already exists"
+            
             # Docker Compose로 빌드 및 배포
             docker compose -f docker-compose.yml build
             docker compose -f docker-compose.yml up -d
