@@ -56,9 +56,10 @@ jobs:
             ENVIRONMENT=staging
             PROJECT_NAME="Batgan Blog"
             STACK_NAME=${{ secrets.STACK_NAME_STAGING }}
+            FRONTEND_HOST=http://${{ secrets.DOMAIN_STAGING }}
             
             # Backend
-            BACKEND_CORS_ORIGINS="http://localhost,http://localhost:5173,https://localhost,https://localhost:5173"
+            BACKEND_CORS_ORIGINS="http://localhost,http://localhost:5173,https://localhost,https://localhost:5173,http://${{ secrets.DOMAIN_STAGING }},https://${{ secrets.DOMAIN_STAGING }}"
             SECRET_KEY=${{ secrets.SECRET_KEY }}
             FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}
             FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}
