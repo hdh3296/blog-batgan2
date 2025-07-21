@@ -1,4 +1,4 @@
-/* 0� �K  � */
+/* 기본 스타일 */
 :root {
     --primary-color: #009579;
     --text-color: #333;
@@ -20,7 +20,7 @@ body {
     background-color: var(--bg-color);
 }
 
-/* �T ��| */
+/* 헤더 네비게이션 */
 header {
     background: var(--card-bg);
     box-shadow: var(--shadow);
@@ -54,7 +54,7 @@ nav a:hover {
     color: var(--primary-color);
 }
 
-/* Tx XP  */
+/* 메인 컨텐츠 */
 main {
     max-width: 1200px;
     margin: 2rem auto;
@@ -62,7 +62,7 @@ main {
     min-height: calc(100vh - 200px);
 }
 
-/* ��\ 9X */
+/* 히어로 섹션 */
 .hero {
     text-align: center;
     padding: 4rem 0;
@@ -88,7 +88,7 @@ main {
     transform: translateY(-2px);
 }
 
-/* 줸 t� */
+/* 포스트 카드 */
 .post-card {
     background: var(--card-bg);
     padding: 1.5rem;
@@ -102,7 +102,7 @@ main {
     transform: translateY(-2px);
 }
 
-/* Q */
+/* 반응형 */
 @media (max-width: 768px) {
     nav {
         flex-direction: column;
