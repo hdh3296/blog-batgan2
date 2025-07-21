@@ -102,3 +102,9 @@ jobs:
             # Docker Compose로 빌드 및 배포
             docker compose -f docker-compose.yml build
             docker compose -f docker-compose.yml up -d
+            
+            # 배포 상태 확인
+            echo "=== Deployment Status ==="
+            docker compose ps
+            echo "=== Container Logs ==="
+            docker compose logs --tail=20
