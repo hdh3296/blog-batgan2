@@ -50,6 +50,14 @@ jobs:
             # 최신 코드 pull
             git pull origin main
             
+            # 디렉토리 구조 확인 (디버깅용)
+            echo "=== Directory Structure ==="
+            ls -la
+            echo "=== Backend Directory ==="
+            ls -la backend/
+            echo "=== Frontend Directory ==="
+            ls -la frontend/ || echo "Frontend directory not found"
+            
             # 환경변수 파일 생성
             cat > .env <<EOF
             DOMAIN=${{ secrets.DOMAIN_STAGING }}

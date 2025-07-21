@@ -11,19 +11,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
-COPY backend/requirements.txt .
+COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY backend/app /app/app
+COPY app /app/app
 
 # Copy alembic configuration
-COPY backend/alembic.ini /app/alembic.ini
+COPY alembic.ini /app/alembic.ini
 
-# Copy frontend templates and static files
-COPY frontend /app/frontend
+# Frontend will be mounted as volume in docker-compose.yml
+# COPY frontend /app/frontend
 
 # Expose port
 EXPOSE 8000
